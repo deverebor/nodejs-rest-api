@@ -17,8 +17,4 @@ export default class Aluno extends Model {
     );
     return this;
   }
-
-  static associate(models) {
-    this.belongsTo(models.Turma, { foreignKey: 'turma_id', as: 'turma' });
-  }
 }
