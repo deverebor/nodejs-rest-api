@@ -3,7 +3,9 @@ import User from '../models/User';
 class UserController {
   async index(request, response) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+        attributes: ['id', 'nome', 'email'],
+      });
       return response.json(users);
     } catch (e) {
       return response.json(null);
@@ -12,8 +14,10 @@ class UserController {
 
   async show(request, response) {
     try {
-      const { id } = request.params;
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(request.params.id, {
+        attributes: ['id', 'nome', 'email'],
+      });
+
       return response.json(user);
     } catch (e) {
       return response.json(null);
@@ -31,10 +35,7 @@ class UserController {
 
   async update(request, response) {
     try {
-      const { id } = request.params;
-      if (!id) return response.status(400).json({ erros: ['Id não informado'] });
-
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(request.userId);
       if (!user) return response.status(400).json({ erros: ['Usuário não existe'] });
 
       const newUser = await user.update(request.body);
@@ -47,10 +48,7 @@ class UserController {
 
   async destroy(request, response) {
     try {
-      const { id } = request.params;
-      if (!id) return response.status(400).json({ erros: ['Id não informado'] });
-
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(request.userId);
       if (!user) return response.status(400).json({ erros: ['Usuário não existe'] });
 
       await user.destroy(request.body);
