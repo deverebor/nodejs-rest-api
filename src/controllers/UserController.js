@@ -26,8 +26,10 @@ class UserController {
 
   async create(request, response) {
     try {
-      const novoUser = await User.create(request.body);
-      response.json(novoUser);
+      const newUser = await User.create(request.body);
+      const { id, nome, email } = newUser;
+
+      response.json({ id, nome, email });
     } catch (e) {
       response.status(400).json({ erros: e.errors.map((error) => error.message) });
     }
@@ -39,8 +41,9 @@ class UserController {
       if (!user) return response.status(400).json({ erros: ['Usuário não existe'] });
 
       const newUser = await user.update(request.body);
+      const { id, nome, email } = newUser;
 
-      return response.json(newUser);
+      return response.json({ id, nome, email });
     } catch (e) {
       return response.json({ erros: e.errors.map((error) => error.message) });
     }
